@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار إعداد وأشكال وأنواع الدراما الإذاعية</title>
+<style>
+:root{--bg:#f4f7fb;--ink:#172033;--muted:#64748b;--primary:#3157d5;--primary2:#213fa8;--good:#137547;--bad:#b42318;--line:#dce4f0}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#eef3ff,#f8fafc 55%,#e8f6f3);font-family:Tahoma,Arial,sans-serif;color:var(--ink);line-height:1.8}
+.wrap{max-width:900px;margin:28px auto;padding:0 16px}.hero{background:linear-gradient(135deg,#182b66,#3157d5);color:#fff;padding:28px;border-radius:22px;box-shadow:0 12px 35px #1e3a8a22}.hero h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px)}.hero p{margin:0;color:#e1e8ff}.pill{display:inline-block;background:#ffffff20;border:1px solid #ffffff50;border-radius:999px;padding:3px 12px;margin-top:12px;font-size:13px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;box-shadow:0 8px 24px #0f172a08}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-weight:bold;margin-bottom:6px}.field input{width:100%;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+.progressrow{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--muted);font-size:14px}.track{height:8px;background:#e7edf7;border-radius:20px;overflow:hidden;margin-top:8px}.bar{height:100%;background:var(--primary);width:0%;transition:width .2s}
+.q{border:1px solid var(--line);border-radius:15px;padding:18px;margin:16px 0;background:#fff}.q h3{font-size:17px;margin:0 0 12px}.num{color:var(--primary);font-weight:bold;margin-left:6px}.opts{display:grid;gap:9px}.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #dbe3ef;border-radius:11px;padding:10px 12px;cursor:pointer}.opt:hover{background:#f6f8ff;border-color:#9eb1f6}.opt input{margin-top:7px;accent-color:var(--primary)}.opt.correct{border-color:#66b98e;background:#effbf4}.opt.wrong{border-color:#f2a09a;background:#fff2f1}.feedback{display:none;padding:10px 12px;border-radius:10px;margin-top:12px;font-size:14px}.feedback.show{display:block}.feedback.ok{background:#effbf4;color:#11643c}.feedback.no{background:#fff2f1;color:#9d2018}
+button{font:inherit;border:0;border-radius:11px;padding:12px 20px;cursor:pointer;font-weight:bold}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary2)}.secondary{background:#e9eef8;color:#243454}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.result{display:none}.score{font-size:36px;font-weight:bold;color:var(--primary)}.small{font-size:13px;color:var(--muted)}.notice{background:#fff8e7;border:1px solid #f1d28a;padding:12px 14px;border-radius:12px;color:#754c00;margin-top:14px}
+@media(max-width:600px){.fields{grid-template-columns:1fr}.hero{padding:22px}.panel{padding:16px}.q{padding:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<h1>اختبار إلكتروني: إعداد وأشكال وأنواع الدراما الإذاعية</h1>
+<p>أسئلة حول إعداد الدراما في الراديو، وأشكالها الإذاعية، وأنواعها وخصائص كل نوع.</p>
+<span class="pill">20 سؤالًا • اختيار من متعدد • تصحيح فوري</span>
+</header>
+<section class="panel">
+<h2 style="margin-top:0">بيانات الطالب</h2>
+<div class="fields">
+<div class="field"><label for="student">اسم الطالب</label><input id="student" placeholder="اكتب الاسم رباعيًّا" autocomplete="name"></div>
+<div class="field"><label for="studentId">الرقم الأكاديمي</label><input id="studentId" placeholder="اكتب الرقم الأكاديمي"></div>
+</div>
+<div class="notice">اختر إجابة لكل سؤال. ستظهر تغذية راجعة بعد الاختيار، ثم يمكنك عرض النتيجة النهائية ومراجعة الإجابات.</div>
+</section>
+<section class="panel">
+<div class="progressrow"><span id="progressText">تمت الإجابة عن 0 من 20</span><span id="percent">0%</span></div><div class="track"><div class="bar" id="bar"></div></div>
+<div id="quiz"></div>
+<div class="actions"><button class="primary" id="finish">إنهاء الاختبار وعرض النتيجة</button><button class="secondary" id="reset">إعادة المحاولة</button></div>
+</section>
+<section class="panel result" id="result" aria-live="polite">
+<h2 style="margin-top:0">نتيجة الاختبار</h2><div id="studentSummary"></div><div class="score" id="score"></div><p id="message"></p><div id="review"></div>
+<div class="actions"><button class="primary" onclick="window.print()">طباعة النتيجة</button><button class="secondary" id="again">إعادة الاختبار</button></div>
+<p class="small">النتيجة تظهر داخل هذا المتصفح فقط ولا تُرسل تلقائيًا إلى المدرس أو قاعدة بيانات.</p>
+</section>
+</div>
+<script>
+const questions=[
+{q:"ما السمة الأساسية التي تميز الدراما الإذاعية في إعدادها؟",a:["الاعتماد على الصورة وحدها","وحدة الموضوع وترابط الأحداث وانسجام البناء","غياب الهدف من البرنامج","تعدد الموضوعات غير المترابطة"],c:1,e:"تقوم الدراما الإذاعية على وحدة الموضوع وتناسق البناء وترابط الأحداث للوصول إلى الهدف."},
+{q:"كيف ينبغي أن تُعالج أفكار البرامج الدرامية وفقًا للمادة؟",a:["بالتعقيد والغموض","بالبساطة والوضوح لتسهيل الفهم والاستيعاب","بإخفاء الهدف عن المستمع","بتكرار المعلومات دون تنظيم"],c:1,e:"تؤكد المادة أهمية القيمة المعنوية للموضوعات ومعالجتها ببساطة ووضوح."},
+{q:"ما الذي يحدد التكوين الدرامي وأساليب المعالجة والأشكال المختارة؟",a:["طول اسم البرنامج فقط","طبيعة الموضوع والوسيلة المستخدمة","عدد العاملين في المحطة فقط","رغبة الممثل وحدها"],c:1,e:"تتحدد المعالجة والأشكال وفقًا لطبيعة الموضوع والوسيلة التي يُقدَّم من خلالها."},
+{q:"ما المقصود بالتمثيلية الإذاعية؟",a:["عمل فني متكامل ذو فكرة واضحة وبداية ووسط ونهاية","برنامج إخباري بلا أحداث","سلسلة من ثلاثين حلقة دائمًا","حوار ارتجالي بلا بناء"],c:0,e:"التمثيلية عمل درامي متكامل ومستمر الأحداث، يدور حول فكرة واضحة وله بداية ووسط ونهاية."},
+{q:"ما المدة المعتادة للتمثيلية الإذاعية الواحدة حسب المادة؟",a:["خمس دقائق","خمس عشرة دقيقة فقط","من نصف ساعة إلى ساعة","ثلاثون حلقة"],c:2,e:"تُقدَّم التمثيلية مرة واحدة، وتتراوح مدتها بين نصف الساعة والساعة."},
+{q:"كم حلقة تتكون منها الخماسية الإذاعية؟",a:["ثلاث حلقات","خمس حلقات","سبع حلقات","ثلاثون حلقة"],c:1,e:"الخماسية تمثيلية مجزأة تُقدَّم في خمس حلقات."},
+{q:"كم تبلغ مدة الحلقة الواحدة في الخماسية وفقًا للمادة؟",a:["خمس دقائق","عشر دقائق","خمس عشرة دقيقة","ساعة كاملة"],c:2,e:"مدة كل حلقة من حلقات الخماسية خمس عشرة دقيقة."},
+{q:"ما الفرق الأساسي بين الخماسية والسباعية؟",a:["الخماسية اجتماعية والسباعية سياسية","الخماسية خمس حلقات والسباعية سبع حلقات","الخماسية بلا بناء درامي","السباعية لا تتضمن تطورًا للأحداث"],c:1,e:"تتشابه الخماسية والسباعية في الفكرة العامة، وتختلفان في عدد الحلقات: خمس مقابل سبع."},
+{q:"كم حلقة يتكون منها المسلسل الشهري؟",a:["خمس حلقات","سبع حلقات","خمس عشرة حلقة","ثلاثون حلقة"],c:3,e:"المسلسل الشهري عمل درامي متكامل يقدم في ثلاثين حلقة."},
+{q:"كم تبلغ مدة حلقة المسلسل الشهري، وفقًا للمادة؟",a:["خمس دقائق","خمس عشرة دقيقة","نصف ساعة","ساعة"],c:1,e:"تُذاع حلقات المسلسل الشهري يوميًا بواقع خمس عشرة دقيقة للحلقة."},
+{q:"لماذا يمكن أن يضم المسلسل الشهري شخصيات أكثر من التمثيلية أو الخماسية؟",a:["لأنه لا يحتاج إلى فكرة محددة","لأن امتداده يسمح بتعميق أبعاد الشخصيات والأحداث","لأنه لا يتضمن تطورًا دراميًا","لأنه يعتمد على الراوي فقط"],c:1,e:"اتساع المسلسل يتيح عددًا أكبر من الشخصيات ويساعد على تعميق أبعادها وأبعاد الأحداث."},
+{q:"أي نوع من الدراما يتناول مشكلة تنبع من واقع المجتمع وظروفه؟",a:["الاجتماعية","العلمية","التاريخية","البوليسية"],c:0,e:"الدراما الاجتماعية تعالج موضوعًا أو مشكلة اجتماعية وقد تقترح حلولًا مناسبة."},
+{q:"دراما تناقش علاقة المجتمع المصري بدولة أخرى في قضية سياسية تُصنَّف على أنها:",a:["دينية","سياسية","اجتماعية فقط","تاريخ شخصيات"],c:1,e:"الدراما السياسية تتناول موضوعًا سياسيًا داخليًا أو متعلقًا بعلاقة المجتمع بدول أخرى."},
+{q:"ما الموضوع المحوري للدراما البوليسية؟",a:["الاكتشافات العلمية","السير النبوية فقط","الجريمة والمجرمون ودور الشرطة في حفظ الأمن","عرض حياة فنان راحل فقط"],c:2,e:"تتناول الدراما البوليسية الجريمة والمجرمين وتبرز دور الشرطة في توفير الأمن والاستقرار."},
+{q:"ما الذي ينبغي مراعاته عند تقديم الدراما التاريخية وفقًا للمادة؟",a:["تغيير الوقائع بما يناسب الحبكة","الالتزام بالرواية الصادقة الأمينة دون تحريف الوقائع","تجاهل الفترة الزمنية","عرض أحداث مستقبلية متخيلة فقط"],c:1,e:"يشدد النص على الأمانة في عرض أحداث الماضي وعدم تعديل الوقائع أو تحريفها."},
+{q:"أي مصدر من المصادر التالية يرتبط مباشرة بالدراما الدينية وفقًا للمادة؟",a:["القرآن الكريم والسيرة النبوية وسير الصحابة والخلفاء","تقارير الطقس فقط","قضايا الجريمة وحدها","الخيال العلمي فقط"],c:0,e:"تتناول الدراما الدينية قضايا متصلة بالدين من خلال القرآن والسيرة النبوية وسير الصحابة والخلفاء."},
+{q:"أي موضوع يناسب الدراما العلمية؟",a:["تعقب مجرم فقط","اكتشاف علمي أو تخيل تحديات المستقبل العلمي","سيرة شخصية سياسية راحلة فقط","عرض مشكلة أسرية دون جانب علمي"],c:1,e:"الدراما العلمية تتناول الفكر والعلماء والإنجازات والاكتشافات، وقد تتخيل المستقبل العلمي."},
+{q:"ما المقصود بدراما تاريخ الشخصيات أو السير الشخصية؟",a:["تناول شخصية راحلة رائدة تركت أثرًا في مجال ما","تقديم كل يوميات شخص عادي حي","عرض قضية اجتماعية عامة فقط","إعادة تمثيل جريمة مجهولة فقط"],c:0,e:"هذا النوع يتناول تاريخ شخصية راحلة رائدة أثرت في العلم أو الفن أو الأدب أو السياسة أو التاريخ."},
+{q:"أي عبارة تصف العلاقة بين أنواع الدراما المذكورة؟",a:["كل نوع منفصل تمامًا ولا يتداخل مع غيره","قد تتضمن المادة الدرامية الواحدة أكثر من جانب","لا توجد أنواع للدراما الإذاعية","كل الدراما يجب أن تكون تاريخية"],c:1,e:"توضح المادة أن التقسيمات ليست قاطعة، فقد تجمع المادة الدرامية الواحدة أكثر من جانب."},
+{q:"ما المبدأ الذي ينبغي أن يلتزم به البرنامج في بنائه وتكوينه؟",a:["التكامل والترابط العضوي بين العناصر والمكونات","فصل جميع العناصر عن بعضها","تعدد الأهداف المتناقضة","الاستغناء عن البناء الفني"],c:0,e:"يؤدي التكامل والترابط بين العناصر إلى وحدة متماسكة ذات تأثير فكري وفني."}
+];
+const quiz=document.getElementById('quiz');
+function render(){quiz.innerHTML='';questions.forEach((item,i)=>{const div=document.createElement('article');div.className='q';div.innerHTML=`<h3><span class="num">السؤال ${i+1}</span>${item.q}</h3><div class="opts">${item.a.map((a,j)=>`<label class="opt" id="opt-${i}-${j}"><input type="radio" name="q${i}" value="${j}"><span>${a}</span></label>`).join('')}</div><div class="feedback" id="fb${i}"></div>`;quiz.appendChild(div);div.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>{showFeedback(i,Number(inp.value));updateProgress();}));});updateProgress();}
+function showFeedback(i,chosen){const item=questions[i],fb=document.getElementById('fb'+i);item.a.forEach((_,j)=>{const el=document.getElementById(`opt-${i}-${j}`);el.classList.remove('correct','wrong');if(j===item.c)el.classList.add('correct');});if(chosen===item.c){fb.className='feedback show ok';fb.textContent='إجابة صحيحة. '+item.e;}else{fb.className='feedback show no';fb.textContent='إجابة غير صحيحة. الإجابة الصحيحة: '+item.a[item.c]+'. '+item.e;document.getElementById(`opt-${i}-${chosen}`).classList.add('wrong');}}
+function updateProgress(){const n=questions.filter((_,i)=>document.querySelector(`input[name="q${i}"]:checked`)).length;document.getElementById('progressText').textContent=`تمت الإجابة عن ${n} من ${questions.length}`;const p=Math.round(n/questions.length*100);document.getElementById('percent').textContent=p+'%';document.getElementById('bar').style.width=p+'%';}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function finish(){const name=document.getElementById('student').value.trim(),id=document.getElementById('studentId').value.trim();if(!name||!id){alert('من فضلك أدخل اسم الطالب والرقم الأكاديمي أولًا.');return;}let score=0,answered=0,review='';questions.forEach((item,i)=>{const chosen=document.querySelector(`input[name="q${i}"]:checked`);if(chosen){answered++;if(Number(chosen.value)===item.c)score++;}if(!chosen)review+=`<p><b>السؤال ${i+1}:</b> لم تتم الإجابة. الصحيح: <span style="color:#137547">${item.a[item.c]}</span></p>`;else if(Number(chosen.value)!==item.c)review+=`<p><b>السؤال ${i+1}:</b> إجابتك: ${item.a[Number(chosen.value)]} — الصحيح: <span style="color:#137547">${item.a[item.c]}</span></p>`;});const pct=Math.round(score/questions.length*100);document.getElementById('studentSummary').innerHTML=`<p><b>اسم الطالب:</b> ${esc(name)} &nbsp; | &nbsp; <b>الرقم الأكاديمي:</b> ${esc(id)}</p><p><b>الأسئلة المجاب عنها:</b> ${answered} من ${questions.length}</p>`;document.getElementById('score').textContent=`${score} / ${questions.length} (${pct}%)`;document.getElementById('message').textContent=pct>=85?'ممتاز! استيعابك للمادة قوي.':pct>=70?'جيد جدًا، راجع النقاط التي أخطأت فيها.':pct>=50?'مستوى مقبول، راجع التغذية الراجعة ثم حاول مرة أخرى.':'راجع المادة ثم أعد المحاولة.';document.getElementById('review').innerHTML=review?'<h3>مراجعة الإجابات التي تحتاج إلى مراجعة</h3>'+review:'<p>أحسنت! أجبت عن جميع الأسئلة إجابة صحيحة.</p>';document.getElementById('result').style.display='block';document.getElementById('result').scrollIntoView({behavior:'smooth'});}
+function resetQuiz(){document.getElementById('student').value='';document.getElementById('studentId').value='';document.getElementById('result').style.display='none';render();window.scrollTo({top:0,behavior:'smooth'});}
+document.getElementById('finish').addEventListener('click',finish);document.getElementById('reset').addEventListener('click',resetQuiz);document.getElementById('again').addEventListener('click',resetQuiz);render();
+</script>
+</body>
+</html>
